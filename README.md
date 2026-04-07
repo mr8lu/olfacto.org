@@ -66,11 +66,12 @@ service cloud.firestore {
    git remote add origin https://github.com/YOUR_USERNAME/olfacto-org.git
    git push -u origin main
    ```
-3. **Enable Pages (via GitHub Actions):**
+3. **Enable Pages:**
    - Go to your repo on GitHub.
    - Click **Settings** > **Pages**.
-   - Under **Build and deployment**, change the **Source** dropdown to **GitHub Actions**.
-   - The included `.github/workflows/deploy.yml` will now automatically deploy your site every time you push to `main`!
+   - Under **Build and deployment**, set **Source** to "Deploy from a branch".
+   - Select the `main` branch and the `/(root)` folder.
+   - Click **Save**.
 
 Your site will be live at `https://YOUR_USERNAME.github.io/olfacto-org/` within minutes.
 

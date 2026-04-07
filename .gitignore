@@ -1,0 +1,25 @@
+# Agentic AI & Workspace Tools
+.gemini/
+.agent/
+.bmad-core/
+.bmad-core
+.idea/
+.vscode/
+*.log
+GEMINI.md
+
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+*.secret
+*.pem
+*.key
+
+# OS & Temp
+.DS_Store
+Thumbs.db
+tmp/
+dist/
+build/
+node_modules/

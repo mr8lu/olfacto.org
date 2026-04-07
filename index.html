@@ -466,20 +466,38 @@
 
     <script type="module">
         // --- FIREBASE CONFIGURATION ---
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+				import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+				import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-analytics.js";
+				import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+        // 1. Import App Check
+        import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app-check.js";
 
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
+				const firebaseConfig = {
+					apiKey: "AIzaSyCAtr1001lU7dMD_SjoDgtdo9fhgYiCLew",
+					authDomain: "olfacto-org.firebaseapp.com",
+					projectId: "olfacto-org",
+					storageBucket: "olfacto-org.firebasestorage.app",
+					messagingSenderId: "944166714649",
+					appId: "1:944166714649:web:41b09c01d554dd59f69988",
+					measurementId: "G-HRT2B6N56X"
+				};
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+				// Initialize Firebase
+				const app = initializeApp(firebaseConfig);
+				const analytics = getAnalytics(app);
+				const db = getFirestore(app);
+
+        // 2. Initialize App Check 
+        // 🚨 IMPORTANT: Replace the string below with your reCAPTCHA Enterprise Site Key 
+        const recaptchaSiteKey = "6Lex5qssAAAAAA9y_ahpdadsSKjplb9Pd-FuaGCF";
+        
+        // Remove FIREBASE_APPCHECK_DEBUG_TOKEN for production security
+        // self.FIREBASE_APPCHECK_DEBUG_TOKEN = true; 
+        
+        const appCheck = initializeAppCheck(app, {
+          provider: new ReCaptchaEnterpriseProvider(recaptchaSiteKey),
+          isTokenAutoRefreshEnabled: true
+        });
 
         // --- RADAR LOGIC ---
         const radarShape = document.getElementById('dynamic-radar-shape');

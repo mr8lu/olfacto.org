@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Olfacto | Sensory Data Infrastructure</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Quantifying the human experience. Olfacto is building the foundational data infrastructure for sensory alignment and empirical perception modeling.">
+    <meta name="keywords" content="Sensory Data, Data Infrastructure, Perception Modeling, Olfacto, Sensory Alignment">
+    <meta name="author" content="Olfacto.org">
+
+    <!-- Open Graph / Facebook / Instagram -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://olfacto.org/">
+    <meta property="og:title" content="Olfacto | Sensory Data Infrastructure">
+    <meta property="og:description" content="Translating ephemeral human perception into actionable, empirical models. Join the sensory alignment revolution.">
+    <meta property="og:image" content="https://olfacto.org/og-image.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://olfacto.org/">
+    <meta property="twitter:title" content="Olfacto | Sensory Data Infrastructure">
+    <meta property="twitter:description" content="Translating ephemeral human perception into actionable, empirical models. Join the sensory alignment revolution.">
+    <meta property="twitter:image" content="https://olfacto.org/og-image.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&family=Space+Grotesk:wght@300..700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            color-scheme: light dark;
+
+            /* Brand Colors (Bauhaus base) */
+            --bh-red: #C62828;
+            --bh-yellow: #F9A825;
+            --bh-blue: #1565C0;
+
+            /* Typography */
+            --font-sans: 'Space Grotesk', sans-serif;
+            --font-mono: 'Space Mono', monospace;
+            --font-display: 'Barlow Condensed', sans-serif;
+
+            /* Spacing */
+            --sp-1: 0.25rem;
+            --sp-2: 0.5rem;
+            --sp-3: 0.75rem;
+            --sp-4: 1rem;
+            --sp-6: 1.5rem;
+            --sp-8: 2rem;
+            --sp-12: 3rem;
+            --sp-16: 4rem;
+
+            /* Light Theme Defaults (M3) */
+            --md-sys-color-primary: #7A5900; 
+            --md-sys-color-on-primary: #FFFFFF;
+            --md-sys-color-secondary: #1B5FA8;
+            --md-sys-color-on-secondary: #FFFFFF;
+            --md-sys-color-tertiary: #C62828;
+            --md-sys-color-on-tertiary: #FFFFFF;
+            
+            --md-sys-color-background: #F5F2EC;
+            --md-sys-color-on-background: #1B1B1A;
+            --md-sys-color-surface: #F5F2EC;
+            --md-sys-color-surface-container-low: #EAE7DF;
+            --md-sys-color-on-surface: #1B1B1A;
+            --md-sys-color-on-surface-variant: #4D4639;
+            
+            --md-sys-color-outline: #7F7567;
+            --md-sys-color-outline-variant: #D0C3B3;
+
+            --accent-stripe-red: var(--bh-red);
+            --accent-stripe-yellow: var(--bh-yellow);
+            --accent-stripe-blue: var(--bh-blue);
+
+            --grid-color: rgba(0, 0, 0, 0.04);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --md-sys-color-primary: #FFB3AB;
+                --md-sys-color-on-primary: #680003;
+                --md-sys-color-secondary: #A4C8FF;
+                --md-sys-color-on-secondary: #00305F;
+                --md-sys-color-tertiary: #FFBA29;
+                --md-sys-color-on-tertiary: #3F2D00;
+                
+                --md-sys-color-background: #0D0D0D;
+                --md-sys-color-on-background: #F5F2EC;
+                --md-sys-color-surface: #141210;
+                --md-sys-color-surface-container-low: #1B1916;
+                --md-sys-color-on-surface: #E7E2DA;
+                --md-sys-color-on-surface-variant: #D0C3B3;
+                
+                --md-sys-color-outline: #9A8D7E;
+                --md-sys-color-outline-variant: #4D4639;
+
+                --accent-stripe-red: var(--md-sys-color-primary);
+                --accent-stripe-yellow: var(--md-sys-color-tertiary);
+                --accent-stripe-blue: var(--md-sys-color-secondary);
+
+                --grid-color: rgba(255, 255, 255, 0.02);
+            }
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--md-sys-color-background);
+            color: var(--md-sys-color-on-background);
+            font-family: var(--font-sans);
+            line-height: 1.4;
+            overflow-x: hidden;
+            background-image:
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 64px 64px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--sp-6);
+        }
+
+        header {
+            padding: var(--sp-8) 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            border-bottom: 4px solid var(--md-sys-color-on-background);
+            line-height: 1;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: var(--sp-12) 0 var(--sp-16) 0;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--sp-12);
+        }
+
+        @media (min-width: 992px) {
+            .hero {
+                grid-template-columns: 1.2fr 0.8fr;
+                align-items: center;
+            }
+        }
+
+        .hero-content h1 {
+            font-family: var(--font-display);
+            font-size: clamp(4rem, 10vw, 7.5rem);
+            line-height: 0.9;
+            text-transform: uppercase;
+            margin-bottom: var(--sp-6);
+        }
+
+        .hero-content p {
+            font-size: 1.25rem;
+            color: var(--md-sys-color-on-surface-variant);
+            max-width: 500px;
+            margin-bottom: var(--sp-8);
+        }
+
+        /* Form Styling */
+        .signup-form {
+            position: relative;
+            background: var(--md-sys-color-surface-container-low);
+            padding: var(--sp-8);
+            border: 1px solid var(--md-sys-color-outline-variant);
+        }
+
+        .signup-form::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px;
+            background: linear-gradient(to right, var(--accent-stripe-red) 0% 33.33%, var(--accent-stripe-yellow) 33.33% 66.66%, var(--accent-stripe-blue) 66.66% 100%);
+        }
+
+        .form-title {
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.1em;
+            margin-bottom: var(--sp-4);
+            color: var(--md-sys-color-on-surface);
+            font-weight: 700;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--sp-4);
+        }
+
+        @media (min-width: 480px) {
+            .input-group {
+                flex-direction: row;
+            }
+        }
+
+        input[type="email"] {
+            flex: 1;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid var(--md-sys-color-outline);
+            color: var(--md-sys-color-on-surface);
+            font-family: var(--font-sans);
+            font-size: 1.125rem;
+            padding: var(--sp-3) 0;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        input[type="email"]:focus {
+            border-bottom-color: var(--md-sys-color-primary);
+        }
+
+        button.btn-primary {
+            background-color: var(--md-sys-color-on-background);
+            color: var(--md-sys-color-background);
+            border: none;
+            font-family: var(--font-mono);
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: var(--sp-4) var(--sp-8);
+            cursor: pointer;
+            box-shadow: 6px 6px 0px var(--md-sys-color-outline-variant);
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+        }
+
+        button.btn-primary:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0px var(--md-sys-color-outline-variant);
+        }
+
+        button.btn-primary:active {
+            transform: translate(2px, 2px);
+            box-shadow: 4px 4px 0px var(--md-sys-color-outline-variant);
+        }
+
+        /* Auto-Morphing Radar Chart */
+        .visual-element {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            user-select: none;
+            padding: var(--sp-8) 0;
+        }
+
+        .radar-container {
+            position: relative;
+            width: 100%;
+            max-width: 440px;
+            aspect-ratio: 1;
+            margin: 0 auto;
+        }
+
+        /* Concentric Scale Rings */
+        .radar-grid {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70%; height: 70%;
+            pointer-events: none;
+        }
+        
+        .ring {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid var(--md-sys-color-outline-variant);
+            border-radius: 50%;
+            opacity: 0.3;
+        }
+        .ring-20  { width: 20%;  height: 20%; }
+        .ring-40  { width: 40%;  height: 40%; }
+        .ring-60  { width: 60%;  height: 60%; }
+        .ring-80  { width: 80%;  height: 80%; }
+        .ring-100 { width: 100%; height: 100%; opacity: 0.6; border-style: dashed; }
+
+        /* Axis Lines */
+        .axis-line {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 1px; height: 35%; /* Half of 70% grid */
+            background: var(--md-sys-color-outline-variant);
+            transform-origin: top center;
+            opacity: 0.5;
+        }
+
+        /* The morphing data layer */
+        .radar-shape-wrapper {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70%; height: 70%;
+        }
+
+        #dynamic-radar-shape {
+            width: 100%;
+            height: 100%;
+            background: var(--md-sys-color-secondary);
+            opacity: 0.5;
+            transition: clip-path 2s ease-in-out;
+            mix-blend-mode: multiply;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            #dynamic-radar-shape {
+                mix-blend-mode: screen;
+            }
+        }
+
+        /* Aligned Labels */
+        .label {
+            position: absolute;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--md-sys-color-on-surface);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-align: center;
+            width: 100px;
+        }
+        
+        /* Positions calculated based on 5-axis geometry around the 70% container */
+        .label-1 { top: 10%; left: 50%; transform: translateX(-50%); } 
+        .label-2 { top: 38%; left: 92%; transform: translateY(-50%); }
+        .label-3 { bottom: 12%; left: 78%; }
+        .label-4 { bottom: 12%; left: 22%; transform: translateX(-100%); }
+        .label-5 { top: 38%; left: 8%; transform: translate(-100%, -50%); }
+
+        /* Info Section */
+        .info-grid {
+            padding: var(--sp-12) 0 var(--sp-16) 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--sp-8);
+            border-top: 1px solid var(--md-sys-color-outline-variant);
+        }
+
+        .info-card h3 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            text-transform: uppercase;
+            margin-bottom: var(--sp-4);
+            color: var(--md-sys-color-primary);
+        }
+
+        .info-card p {
+            color: var(--md-sys-color-on-surface-variant);
+        }
+
+        footer {
+            padding: var(--sp-12) 0;
+            border-top: 1px solid var(--md-sys-color-outline-variant);
+            display: flex;
+            justify-content: center;
+            color: var(--md-sys-color-on-surface-variant);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .tag-line {
+            font-family: var(--font-mono);
+            color: var(--md-sys-color-on-surface);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="logo">OLFACTO.</div>
+            <div class="tag-line">Sensory Data Infrastructure</div>
+        </header>
+
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Quantifying the Human Experience.</h1>
+                <p>Olfacto is building the foundational data infrastructure for sensory alignment. We translate subjective human perception into actionable, empirical models.</p>
+                
+                <div class="signup-form">
+                    <div class="form-title">Request Early Access</div>
+                    <form id="waitlist-form">
+                        <div class="input-group">
+                            <input type="email" placeholder="contact@organization.com" required>
+                            <button type="submit" class="btn-primary">Join Waitlist</button>
+                        </div>
+                    </form>
+                    <div id="form-feedback" style="margin-top: var(--sp-4); display: none;" class="form-title">Thank you. Your request has been logged.</div>
+                </div>
+            </div>
+
+            <div class="visual-element">
+                <div class="radar-container">
+                    <!-- Concentric Grid -->
+                    <div class="radar-grid">
+                        <div class="ring ring-20"></div>
+                        <div class="ring ring-40"></div>
+                        <div class="ring ring-60"></div>
+                        <div class="ring ring-80"></div>
+                        <div class="ring ring-100"></div>
+
+                        <!-- 5-Point Axis Lines -->
+                        <div class="axis-line" style="transform: rotate(0deg) translate(-50%, 0);"></div>
+                        <div class="axis-line" style="transform: rotate(72deg) translate(-50%, 0);"></div>
+                        <div class="axis-line" style="transform: rotate(144deg) translate(-50%, 0);"></div>
+                        <div class="axis-line" style="transform: rotate(216deg) translate(-50%, 0);"></div>
+                        <div class="axis-line" style="transform: rotate(288deg) translate(-50%, 0);"></div>
+                    </div>
+
+                    <!-- Morphing Polygon -->
+                    <div class="radar-shape-wrapper">
+                        <div id="dynamic-radar-shape"></div>
+                    </div>
+
+                    <!-- Category Labels Aligned to Vertices -->
+                    <div class="label label-1">STRUCTURE</div>
+                    <div class="label label-2">INTENSITY</div>
+                    <div class="label label-3">RESONANCE</div>
+                    <div class="label label-4">TEXTURE</div>
+                    <div class="label label-5">CLARITY</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="info-grid">
+            <div class="info-card">
+                <h3>Sensory Quantification</h3>
+                <p>Translating ephemeral sensory experiences into structured, robust data points for empirical analysis and mapping.</p>
+            </div>
+            <div class="info-card">
+                <h3>Algorithmic Alignment</h3>
+                <p>Bridging the gap between deeply subjective human perception and objective classification models.</p>
+            </div>
+            <div class="info-card">
+                <h3>Foundational Layer</h3>
+                <p>Providing the core, scalable architecture required for the next generation of sensory-driven technologies.</p>
+            </div>
+        </section>
+
+        <footer>
+            <div>© 2026 OLFACTO. ALL RIGHTS RESERVED.</div>
+        </footer>
+    </div>
+
+    <script type="module">
+        // --- FIREBASE CONFIGURATION ---
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // --- RADAR LOGIC ---
+        const radarShape = document.getElementById('dynamic-radar-shape');
+        
+        // Calculate polygon points for 5-axis radar
+        // radius is 0 to 50 (percentage of the container)
+        function getPolygonPoints(values) {
+            const centerX = 50;
+            const centerY = 50;
+            const angles = [0, 72, 144, 216, 288]; // 5 axis angles in degrees
+            
+            const points = angles.map((angle, i) => {
+                const r = values[i] * 50; // value is 0.0 to 1.0
+                const rad = (angle - 90) * (Math.PI / 180); // -90 to start at top
+                const x = centerX + r * Math.cos(rad);
+                const y = centerY + r * Math.sin(rad);
+                return `${x.toFixed(2)}% ${y.toFixed(2)}%`;
+            });
+            
+            return `polygon(${points.join(', ')})`;
+        }
+
+        function updateRadar() {
+            // Generate 5 random grounded values between 0.3 and 0.9
+            const randomValues = Array.from({length: 5}, () => 0.3 + Math.random() * 0.6);
+            radarShape.style.clipPath = getPolygonPoints(randomValues);
+        }
+
+        // Initialize and animate
+        setInterval(updateRadar, 3000);
+        updateRadar();
+
+        // --- FORM LOGIC ---
+        document.getElementById('waitlist-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const submitButton = this.querySelector('button');
+            const email = this.querySelector('input').value;
+            
+            submitButton.disabled = true;
+            submitButton.textContent = 'Joining...';
+
+            try {
+                await addDoc(collection(db, "waitlist"), {
+                    email: email,
+                    timestamp: serverTimestamp(),
+                    source: "olfacto_landing"
+                });
+                this.style.display = 'none';
+                document.getElementById('form-feedback').style.display = 'block';
+            } catch (error) {
+                console.error("Firebase Error: ", error);
+                alert("Submission failed. Check your Firebase config or rules.");
+                submitButton.disabled = false;
+                submitButton.textContent = 'Join Waitlist';
+            }
+        });
+    </script>
+</body>
+</html>

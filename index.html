@@ -403,7 +403,11 @@
                     <div class="form-title">Request Early Access</div>
                     <form id="waitlist-form">
                         <div class="input-group">
-                            <input type="email" placeholder="contact@organization.com" required>
+                            <input type="email" name="email" placeholder="contact@organization.com" required>
+                            <!-- Sneaky honeypot field for bot prevention -->
+                            <div style="position: absolute; left: -5000px;" aria-hidden="true">
+                                <input type="text" name="secondary_email_verification" tabIndex="-1" autoComplete="off">
+                            </div>
                             <button type="submit" class="btn-primary">Join Waitlist</button>
                         </div>
                     </form>
@@ -469,8 +473,6 @@
 				import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
 				import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-analytics.js";
 				import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
-        // 1. Import App Check
-        import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app-check.js";
 
 				const firebaseConfig = {
 					apiKey: "AIzaSyCAtr1001lU7dMD_SjoDgtdo9fhgYiCLew",
@@ -486,18 +488,6 @@
 				const app = initializeApp(firebaseConfig);
 				const analytics = getAnalytics(app);
 				const db = getFirestore(app);
-
-        // 2. Initialize App Check 
-        // 🚨 IMPORTANT: Replace the string below with your reCAPTCHA Site Key 
-        const recaptchaSiteKey = "6Lex5qssAAAAAA9y_ahpdadsSKjplb9Pd-FuaGCF";
-        
-        // Remove FIREBASE_APPCHECK_DEBUG_TOKEN for production security
-        // self.FIREBASE_APPCHECK_DEBUG_TOKEN = true; 
-        
-        const appCheck = initializeAppCheck(app, {
-          provider: new ReCaptchaV3Provider(recaptchaSiteKey),
-          isTokenAutoRefreshEnabled: true
-        });
 
         // --- RADAR LOGIC ---
         const radarShape = document.getElementById('dynamic-radar-shape');
@@ -533,8 +523,18 @@
         // --- FORM LOGIC ---
         document.getElementById('waitlist-form').addEventListener('submit', async function(e) {
             e.preventDefault();
+            
+            // Honeypot check: If the hidden field has a value, it's a bot.
+            const trap = this.querySelector('input[name="secondary_email_verification"]').value;
+            if (trap) {
+                console.log("Submission ignored.");
+                this.style.display = 'none';
+                document.getElementById('form-feedback').style.display = 'block';
+                return; 
+            }
+
             const submitButton = this.querySelector('button');
-            const email = this.querySelector('input').value;
+            const email = this.querySelector('input[name="email"]').value;
             
             submitButton.disabled = true;
             submitButton.textContent = 'Joining...';
